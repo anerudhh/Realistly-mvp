@@ -1,7 +1,6 @@
 import { supabaseAdmin } from '../../utils/supabase';
-import { processSearchQuery, enhanceSearchWithGeocoding, searchByDistance } from '../../utils/ai-processor';
+import { processSearchQuery } from '../../utils/ai-processor';
 import { searchListings, getAllListings } from '../../utils/file-storage';
-import { calculateDistance } from '../../utils/geocoding';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -27,34 +26,24 @@ export default async function handler(req, res) {
     let results = [];
 
     if (hasValidSupabase) {
-      try {
-        // Use Supabase database
-        // Log the search query to user_queries table
-        try {
-          const { data: logData, error: logError } = await supabaseAdmin
-            .from('user_queries')
-            .insert({
-              query_text: query,
-              timestamp: new Date().toISOString(),
-              user_ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-              user_agent: req.headers['user-agent'] || 'Unknown',
-            })
-            .select();
+      // Use Supabase database
+      // Log the search query to user_queries table
+      const { data: logData, error: logError } = await supabaseAdmin
+        .from('user_queries')
+        .insert({
+          query_text: query,
+          timestamp: new Date().toISOString(),
+          user_ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+          user_agent: req.headers['user-agent'] || 'Unknown',
+        })
+        .select();
 
-          if (logError) {
-            console.error("Error logging search query:", logError);
-          }
-        } catch (logErr) {
-          console.error("Error logging search query:", {
-            message: logErr.message,
-            details: logErr.toString(),
-            hint: logErr.hint || '',
-            code: logErr.code || ''
-          });
-        }
+      if (logError) {
+        console.error("Error logging search query:", logError);
+      }
 
-        // Process the search query using AI
-        const searchParams = await processSearchQuery(query);
+      // Process the search query using AI
+      const searchParams = await processSearchQuery(query);
       
       // Build Supabase query based on extracted parameters
       let supabaseQuery = supabaseAdmin
@@ -87,14 +76,6 @@ export default async function handler(req, res) {
       }
 
       results = data || [];
-      } catch (dbError) {
-        console.error("Database search error:", dbError);
-        console.log("Falling back to file storage");
-        
-        // Fallback to file storage if database fails
-        const searchParams = await processSearchQuery(query);
-        results = searchListings(searchParams);
-      }
     } else {
       // Use file storage
       console.log("Using file storage for search");

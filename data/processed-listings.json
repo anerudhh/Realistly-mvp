@@ -1,0 +1,553 @@
+[
+  {
+    "raw_data_id": 1751462019518.2158,
+    "property_type": "apartment",
+    "location": {
+      "area": "Koramangala",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 8500000,
+      "currency": "INR",
+      "formatted": "₹85 lakhs"
+    },
+    "area": {
+      "value": 1200,
+      "unit": "sq ft",
+      "formatted": "1200 sq ft"
+    },
+    "bhk": 2,
+    "description": "Hi everyone! I have a 2 BHK apartment for sale in Koramangala. 1200 sq ft, fully furnished, parking included. Price: 85 lakhs. Contact me at 9876543210",
+    "contact_person": "Rajesh Kumar",
+    "contact_phone": "9876543210",
+    "amenities": [
+      "parking"
+    ],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 88.88888888888889,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.520Z",
+    "id": 1751462019536,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019520.319,
+    "property_type": "Unknown",
+    "location": {
+      "area": "Not specified",
+      "city": null,
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": null,
+      "unit": null,
+      "formatted": "Area not specified"
+    },
+    "bhk": null,
+    "description": "3rd floor, swimming pool, gym, 24/7 security. Ready to move in!",
+    "contact_person": "Rajesh Kumar",
+    "contact_phone": null,
+    "amenities": [
+      "pool",
+      "gym",
+      "security"
+    ],
+    "missing_fields": [
+      "price",
+      "area",
+      "location",
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.521Z",
+    "id": 1751462019537,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "unknown",
+    "listing_type": "unknown"
+  },
+  {
+    "raw_data_id": 1751462019521.4028,
+    "property_type": "villa",
+    "location": {
+      "area": "Whitefield",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 15000000,
+      "currency": "INR",
+      "formatted": "₹1.5 crores"
+    },
+    "area": {
+      "value": null,
+      "unit": null,
+      "formatted": "Area not specified"
+    },
+    "bhk": 3,
+    "description": "Looking for 3 BHK villa in Whitefield area. Budget up to 1.5 crores. Need garden space for kids. Anyone?",
+    "contact_person": "Ankit Patel",
+    "contact_phone": null,
+    "amenities": [
+      "garden"
+    ],
+    "missing_fields": [
+      "area",
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 88.88888888888889,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.522Z",
+    "id": 1751462019538,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019522.1418,
+    "property_type": "villa",
+    "location": {
+      "area": "Whitefield",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 14000000,
+      "currency": "INR",
+      "formatted": "₹1.4 crores"
+    },
+    "area": {
+      "value": 2000,
+      "unit": "sq ft",
+      "formatted": "2000 sq ft"
+    },
+    "bhk": 3,
+    "description": "@Ankit Patel I have exactly what you need! 3 BHK independent villa, 2000 sq ft, beautiful garden, gated community. Whitefield main road. 1.4 crores negotiable. Call 8765432109",
+    "contact_person": "Sunita Reddy",
+    "contact_phone": "8765432109",
+    "amenities": [
+      "garden"
+    ],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 88.88888888888889,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.523Z",
+    "id": 1751462019539,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019523.6445,
+    "property_type": "Unknown",
+    "location": {
+      "area": "HSR Layout",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": 800,
+      "unit": "sq ft",
+      "formatted": "800 sq ft"
+    },
+    "bhk": 1,
+    "description": "Anyone looking for rental? 1 BHK in HSR Layout, 800 sq ft, semi-furnished, rent 25k per month including maintenance. Available from next month.",
+    "contact_person": "Vikram Singh",
+    "contact_phone": null,
+    "amenities": [],
+    "missing_fields": [
+      "price",
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.524Z",
+    "id": 1751462019540,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "rent",
+    "listing_type": "rent"
+  },
+  {
+    "raw_data_id": 1751462019524.4465,
+    "property_type": "house",
+    "location": {
+      "area": "Indiranagar",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 22000000,
+      "currency": "INR",
+      "formatted": "₹2.2 crores"
+    },
+    "area": {
+      "value": 2800,
+      "unit": "sq ft",
+      "formatted": "2800 sq ft"
+    },
+    "bhk": 4,
+    "description": "URGENT SALE! 4 BHK penthouse in Indiranagar. 2800 sq ft, terrace garden, 2 parking spaces, modular kitchen. Original price 2.2 crores, selling for 1.9 crores due to relocation. Contact 6543210987",
+    "contact_person": "Rohit Gupta",
+    "contact_phone": "6543210987",
+    "amenities": [
+      "parking",
+      "garden"
+    ],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 88.88888888888889,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.526Z",
+    "id": 1751462019541,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019526.9373,
+    "property_type": "commercial",
+    "location": {
+      "area": "Electronic City",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 300000,
+      "currency": "INR",
+      "formatted": "₹3 lakhs"
+    },
+    "area": {
+      "value": 5000,
+      "unit": "sq ft",
+      "formatted": "5000 sq ft"
+    },
+    "bhk": null,
+    "description": "Looking for commercial space for rent in Electronic City. Need around 5000 sq ft for IT office. Budget 3 lakhs per month. Any leads?",
+    "contact_person": "Kavya Nair",
+    "contact_phone": null,
+    "amenities": [],
+    "missing_fields": [
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 66.66666666666666,
+    "status": "needs_review",
+    "processed_at": "2025-07-02T13:13:39.527Z",
+    "id": 1751462019542,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "rent",
+    "listing_type": "rent"
+  },
+  {
+    "raw_data_id": 1751462019527.666,
+    "property_type": "commercial",
+    "location": {
+      "area": "Electronic City",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 280000,
+      "currency": "INR",
+      "formatted": "₹2.8 lakhs"
+    },
+    "area": {
+      "value": 4800,
+      "unit": "sq ft",
+      "formatted": "4800 sq ft"
+    },
+    "bhk": null,
+    "description": "@Kavya Nair I have commercial space in Electronic City Phase 1. 4800 sq ft, fully fitted office, lift, parking for 15 cars. Rent 2.8 lakhs per month. Call me 5432109876",
+    "contact_person": "Suresh Iyer",
+    "contact_phone": "5432109876",
+    "amenities": [
+      "parking",
+      "lift"
+    ],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.528Z",
+    "id": 1751462019543,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "rent",
+    "listing_type": "rent"
+  },
+  {
+    "raw_data_id": 1751462019528.7104,
+    "property_type": "Unknown",
+    "location": {
+      "area": "Jayanagar",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 7000000,
+      "currency": "INR",
+      "formatted": "₹70 lakhs"
+    },
+    "area": {
+      "value": 1100,
+      "unit": "sq ft",
+      "formatted": "1100 sq ft"
+    },
+    "bhk": 2,
+    "description": "Selling my 2 BHK in Jayanagar 4th block. 1100 sq ft, east facing, traditional building, close to metro. Price 70 lakhs. Genuine buyers only. 4321098765",
+    "contact_person": "Deepika Rao",
+    "contact_phone": "4321098765",
+    "amenities": [],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.528Z",
+    "id": 1751462019544,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019529.323,
+    "property_type": "Unknown",
+    "location": {
+      "area": "Not specified",
+      "city": null,
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": null,
+      "unit": null,
+      "formatted": "Area not specified"
+    },
+    "bhk": null,
+    "description": "@Deepika Rao what's the age of the building? Any parking?",
+    "contact_person": "Amit Jain",
+    "contact_phone": null,
+    "amenities": [
+      "parking"
+    ],
+    "missing_fields": [
+      "price",
+      "area",
+      "location",
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.529Z",
+    "id": 1751462019545,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "unknown",
+    "listing_type": "unknown"
+  },
+  {
+    "raw_data_id": 1751462019530.1365,
+    "property_type": "Unknown",
+    "location": {
+      "area": "Not specified",
+      "city": null,
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": null,
+      "unit": null,
+      "formatted": "Area not specified"
+    },
+    "bhk": null,
+    "description": "Building is 15 years old, well maintained. Yes, one covered parking included in price.",
+    "contact_person": "Deepika Rao",
+    "contact_phone": null,
+    "amenities": [
+      "parking"
+    ],
+    "missing_fields": [
+      "price",
+      "area",
+      "location",
+      "contact"
+    ],
+    "needs_followup": true,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.530Z",
+    "id": 1751462019546,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "unknown",
+    "listing_type": "unknown"
+  },
+  {
+    "raw_data_id": 1751462019530.242,
+    "property_type": "house",
+    "location": {
+      "area": "Hebbal",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": 1800,
+      "unit": "sq ft",
+      "formatted": "1800 sq ft"
+    },
+    "bhk": 3,
+    "description": "RENT: Luxury 3 BHK in Hebbal, 1800 sq ft, lake view, club house, swimming pool, gym. Rent 45k per month. Premium location. Contact 3210987654",
+    "contact_person": "Neha Agarwal",
+    "contact_phone": "3210987654",
+    "amenities": [
+      "pool",
+      "gym"
+    ],
+    "missing_fields": [
+      "price"
+    ],
+    "needs_followup": false,
+    "confidence_score": 100,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.531Z",
+    "id": 1751462019547,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "rent",
+    "listing_type": "rent"
+  },
+  {
+    "raw_data_id": 1751462019531.5364,
+    "property_type": "villa",
+    "location": {
+      "area": "Sarjapur",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 18000000,
+      "currency": "INR",
+      "formatted": "₹180 lakhs"
+    },
+    "area": {
+      "value": null,
+      "unit": null,
+      "formatted": "Area not specified"
+    },
+    "bhk": null,
+    "description": "Anyone interested in land? 50x80 site in Sarjapur road, DTCP approved, clear title. 180 lakhs negotiable. Good for villa construction. Call 2109876543",
+    "contact_person": "Ravi Krishnan",
+    "contact_phone": "2109876543",
+    "amenities": [],
+    "missing_fields": [
+      "area"
+    ],
+    "needs_followup": false,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.532Z",
+    "id": 1751462019548,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  },
+  {
+    "raw_data_id": 1751462019533.6997,
+    "property_type": "apartment",
+    "location": {
+      "area": "Marathahalli",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": null,
+      "currency": "INR",
+      "formatted": "Price not mentioned"
+    },
+    "area": {
+      "value": 450,
+      "unit": "sq ft",
+      "formatted": "450 sq ft"
+    },
+    "bhk": null,
+    "description": "Studio apartment for rent in Marathahalli. 450 sq ft, fully furnished, perfect for bachelors. Rent 18k including everything. Available immediately. 1098765432",
+    "contact_person": "Arjun Reddy",
+    "contact_phone": "1098765432",
+    "amenities": [],
+    "missing_fields": [
+      "price"
+    ],
+    "needs_followup": false,
+    "confidence_score": 77.77777777777779,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.533Z",
+    "id": 1751462019549,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "rent",
+    "listing_type": "rent"
+  },
+  {
+    "raw_data_id": 1751462019533.1267,
+    "property_type": "Unknown",
+    "location": {
+      "area": "Banashankari",
+      "city": "Bengaluru",
+      "landmarks": []
+    },
+    "price": {
+      "value": 6800000,
+      "currency": "INR",
+      "formatted": "₹68 lakhs"
+    },
+    "area": {
+      "value": 1350,
+      "unit": "sq ft",
+      "formatted": "1350 sq ft"
+    },
+    "bhk": 5,
+    "description": "For sale: 2.5 BHK in Banashankari. 1350 sq ft, 2 bathrooms, balcony, lift, covered parking. Price 68 lakhs. Good connectivity to metro and bus stand. Contact 9876501234",
+    "contact_person": "Lakshmi Narayan",
+    "contact_phone": "9876501234",
+    "amenities": [
+      "parking",
+      "lift",
+      "balcony"
+    ],
+    "missing_fields": [],
+    "needs_followup": false,
+    "confidence_score": 88.88888888888889,
+    "status": "verified",
+    "processed_at": "2025-07-02T13:13:39.534Z",
+    "id": 1751462019550,
+    "created_at": "2025-07-02T13:13:39.536Z",
+    "listingType": "sale",
+    "listing_type": "sale"
+  }
+]

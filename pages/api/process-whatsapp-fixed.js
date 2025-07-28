@@ -3,6 +3,7 @@ import fs from 'fs';
 import { parseWhatsAppChat } from '../../utils/whatsapp-parser';
 import { processRealEstateMessage } from '../../utils/ai-processor';
 import { supabaseAdmin } from '../../utils/supabase';
+import { saveListings } from '../../utils/file-storage';
 
 // Disable body parsing, we'll handle the form data manually
 export const config = {
@@ -96,6 +97,16 @@ export default async function handler(req, res) {
   }
 
   console.log("=== Starting WhatsApp processing ===");
+  
+  // Check if Supabase is properly configured
+  const hasValidSupabase = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                           process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+                           process.env.SUPABASE_SERVICE_KEY &&
+                           process.env.SUPABASE_SERVICE_KEY !== 'placeholder_service_key';
+  
+  if (!hasValidSupabase) {
+    console.warn("Supabase not configured - running in test mode");
+  }
 
   try {
     // Parse the incoming form data
@@ -178,8 +189,16 @@ export default async function handler(req, res) {
     let messages;
     try {
       console.log("Parsing WhatsApp chat...");
+      console.log("First 500 characters of chat content:", chatContent.substring(0, 500));
       messages = parseWhatsAppChat(chatContent);
       console.log("Messages parsed, count:", messages ? messages.length : 0);
+      
+      if (messages && messages.length > 0) {
+        console.log("First few messages:", messages.slice(0, 3).map(m => ({
+          sender: m.sender_name,
+          content: m.content.substring(0, 100)
+        })));
+      }
       
       if (!messages || messages.length === 0) {
         console.warn("No messages found in chat file");
@@ -187,7 +206,11 @@ export default async function handler(req, res) {
           success: true,
           totalMessages: 0,
           processedListings: [],
-          message: 'No valid WhatsApp messages found in the file. Please ensure this is a valid WhatsApp chat export.'
+          message: 'No valid WhatsApp messages found in the file. Please ensure this is a valid WhatsApp chat export.',
+          debug: {
+            contentLength: chatContent.length,
+            firstChars: chatContent.substring(0, 200)
+          }
         });
       }
     } catch (parseError) {
@@ -203,16 +226,181 @@ export default async function handler(req, res) {
       ? chatFile.originalFilename.replace('.txt', '').trim() 
       : 'Unknown Group';
     
+    // Filter for real estate related messages with comprehensive keyword matching
+    const isRealEstateMessage = (content) => {
+      const lowerContent = content.toLowerCase();
+      
+      // Core real estate keywords
+      const coreKeywords = [
+        'bhk', 'apartment', 'villa', 'house', 'flat', 'property', 'rent', 'sale',
+        'buy', 'sell', 'broker', 'agent', 'realtor', 'builder', 'developer',
+        'sq ft', 'sqft', 'square feet', 'area', 'carpet area', 'built up area',
+        'crore', 'lakh', 'lakhs', 'crores', 'price', 'cost', 'budget',
+        'bedroom', 'bathroom', 'kitchen', 'hall', 'balcony', 'terrace',
+        'furnished', 'unfurnished', 'semi-furnished', 'semi furnished',
+        'parking', 'car parking', 'bike parking', 'covered parking',
+        'gym', 'pool', 'swimming pool', 'club house', 'clubhouse',
+        'security', 'lift', 'elevator', 'garden', 'park', 'playground',
+        'gated community', 'society', 'complex', 'tower', 'wing',
+        'floor', 'ground floor', 'top floor', 'penthouse', 'duplex',
+        'studio', 'commercial', 'office', 'shop', 'warehouse', 'godown',
+        'plot', 'land', 'site', 'layout', 'venture', 'project',
+        'ready to move', 'under construction', 'new launch', 'possession',
+        'rera', 'approved', 'loan', 'emi', 'home loan', 'bank loan',
+        'registration', 'legal', 'clear title', 'khata', 'ec'
+      ];
+      
+      // Location-specific keywords (Indian cities and areas)
+      const locationKeywords = [
+        'koramangala', 'whitefield', 'hsr layout', 'hsr', 'indiranagar', 'electronic city',
+        'jayanagar', 'hebbal', 'sarjapur', 'marathahalli', 'banashankari', 'jp nagar',
+        'btm layout', 'btm', 'yelahanka', 'rajajinagar', 'malleswaram', 'basavanagudi',
+        'frazer town', 'richmond town', 'mg road', 'brigade road', 'commercial street',
+        'silk board', 'bommanahalli', 'bagalur', 'devanahalli', 'kengeri',
+        'rajarajeshwari nagar', 'rr nagar', 'vijayanagar', 'magadi road', 'mysore road',
+        'tumkur road', 'hebbal flyover', 'outer ring road', 'orr', 'sarjapur road',
+        'hosur road', 'old airport road', 'bellandur', 'kasravahalli', 'kadugodi',
+        'varthur', 'mahadevapura', 'bangalore', 'bengaluru',
+        'bandra', 'andheri', 'powai', 'borivali', 'malad', 'goregaon', 'kandivali',
+        'juhu', 'versova', 'lokhandwala', 'bandra kurla complex', 'bkc', 'lower parel',
+        'worli', 'colaba', 'nariman point', 'fort', 'churchgate', 'marine drive',
+        'thane', 'navi mumbai', 'vashi', 'kharghar', 'panvel', 'kalyan', 'dombivli',
+        'mumbai', 'gurgaon', 'gurugram', 'noida', 'faridabad', 'ghaziabad', 'dwarka',
+        'rohini', 'janakpuri', 'lajpat nagar', 'cp', 'connaught place', 'karol bagh',
+        'rajouri garden', 'pitampura', 'shalimar bagh', 'model town', 'civil lines',
+        'vasant kunj', 'vasant vihar', 'greater kailash', 'defence colony', 'friends colony',
+        'delhi', 'new delhi', 't nagar', 'adyar', 'besant nagar', 'velachery',
+        'tambaram', 'chromepet', 'omr', 'ecr', 'anna nagar', 'guindy', 'mylapore',
+        'triplicane', 'egmore', 'chennai', 'koregaon park', 'kalyani nagar',
+        'viman nagar', 'aundh', 'baner', 'wakad', 'hinjewadi', 'magarpatta',
+        'kothrud', 'karve nagar', 'shivajinagar', 'pune', 'hitech city', 'gachibowli',
+        'kondapur', 'jubilee hills', 'banjara hills', 'madhapur', 'secunderabad',
+        'begumpet', 'ameerpet', 'kukatpally', 'hyderabad'
+      ];
+      
+      // Price/currency indicators
+      const priceIndicators = [
+        '₹', 'rs', 'rupees', 'inr', 'lakh', 'lakhs', 'crore', 'crores',
+        'price', 'cost', 'budget', 'rent', 'deposit', 'advance', 'token',
+        'booking', 'down payment', 'emi', 'per month', '/month', 'monthly'
+      ];
+      
+      // Contact indicators
+      const contactIndicators = [
+        'contact', 'call', 'phone', 'mobile', 'whatsapp', 'email', 'visit',
+        'interested', 'available', 'immediate', 'urgent', 'requirement'
+      ];
+      
+      // Check if message contains any combination of keywords
+      const hasCore = coreKeywords.some(keyword => lowerContent.includes(keyword));
+      const hasLocation = locationKeywords.some(keyword => lowerContent.includes(keyword));
+      const hasPrice = priceIndicators.some(indicator => lowerContent.includes(indicator));
+      const hasContact = contactIndicators.some(indicator => lowerContent.includes(indicator));
+      
+      // Additional patterns for property dimensions and specifications
+      const hasPropertySpecs = /\d+\s*(bhk|bedroom|bath|sq\.?\s*ft|sqft|floor|acre)/.test(lowerContent);
+      const hasPropertyTypes = /(apartment|villa|house|flat|plot|land|office|commercial|pg|hostel)/.test(lowerContent);
+      const hasPropertyActions = /(for\s+sale|for\s+rent|to\s+let|available|looking\s+for|wanted|urgent|immediate)/.test(lowerContent);
+      
+      // Message must have at least 2 of these categories or specific strong indicators
+      const categoryCount = [hasCore, hasLocation, hasPrice, hasContact, hasPropertySpecs, hasPropertyTypes, hasPropertyActions]
+        .filter(Boolean).length;
+      
+      // Strong indicators that definitely indicate real estate
+      const strongIndicators = [
+        /\d+\s*bhk/i,
+        /₹\s*\d+/,
+        /\d+\s*lakh/i,
+        /\d+\s*crore/i,
+        /\d+\s*sq\.?\s*ft/i,
+        /for\s+(sale|rent)/i,
+        /property\s+(for|available)/i,
+        /apartment\s+(for|available)/i,
+        /villa\s+(for|available)/i,
+        /house\s+(for|available)/i,
+        /flat\s+(for|available)/i,
+        /plot\s+(for|available)/i,
+        /real\s+estate/i,
+        /property\s+(dealer|agent|broker)/i
+      ];
+      
+      const hasStrongIndicator = strongIndicators.some(pattern => pattern.test(content));
+      
+      // Return true if we have strong indicators OR sufficient category coverage
+      return hasStrongIndicator || categoryCount >= 2;
+    };
+    
+    const realEstateMessages = messages.filter(msg => {
+      const isRealEstate = isRealEstateMessage(msg.content);
+      if (isRealEstate) {
+        console.log(`Real estate message found from ${msg.sender_name}: "${msg.content.substring(0, 100)}..."`);
+      }
+      return isRealEstate;
+    });
+    
+    console.log(`Found ${realEstateMessages.length} real estate messages out of ${messages.length} total messages`);
+    
+    // Debug: Show some sample messages if no real estate messages found
+    if (realEstateMessages.length === 0) {
+      console.log("No real estate messages found. Here are some sample messages:");
+      messages.slice(0, 5).forEach((msg, index) => {
+        console.log(`Sample ${index + 1} from ${msg.sender_name}: "${msg.content.substring(0, 200)}"`);
+      });
+    }
+    
+    if (realEstateMessages.length === 0) {
+      console.log("No real estate messages found");
+      return res.status(200).json({ 
+        success: true,
+        totalMessages: messages.length,
+        realEstateMessages: 0,
+        processedListings: [],
+        message: 'No property listings were found in the chat file. Try a different file.',
+        debug: {
+          allMessages: messages.slice(0, 3).map(m => ({ 
+            sender: m.sender_name, 
+            content: m.content.substring(0, 100) 
+          }))
+        }
+      });
+    }
+    
     // Store raw messages in Supabase and collect their IDs
     const rawDataInsertions = [];
     const processedListings = [];
     
-    for (const message of messages) {
+    // Process ALL real estate messages (no limit)
+    const messagesToProcess = realEstateMessages.length;
+    console.log(`Processing ALL ${messagesToProcess} real estate messages found`);
+    
+    for (const message of realEstateMessages) {
       try {
-        // Insert raw data
-        const { data: rawData, error: rawError } = await supabaseAdmin
-          .from('raw_data')
-          .insert({
+        // Insert raw data (skip database if not configured)
+        let rawData;
+        if (hasValidSupabase) {
+          const { data: dbRawData, error: rawError } = await supabaseAdmin
+            .from('raw_data')
+            .insert({
+              timestamp: message.timestamp,
+              sender_name: message.sender_name,
+              sender_phone: message.sender_phone,
+              raw_content: message.content,
+              source: message.source,
+              source_group: sourceGroup,
+              media_urls: message.media_urls
+            })
+            .select()
+            .single();
+            
+          if (rawError) {
+            console.error("Error inserting raw data:", rawError);
+            continue;
+          }
+          rawData = dbRawData;
+        } else {
+          // Test mode - create mock raw data
+          rawData = {
+            id: Date.now() + Math.random(),
             timestamp: message.timestamp,
             sender_name: message.sender_name,
             sender_phone: message.sender_phone,
@@ -220,13 +408,7 @@ export default async function handler(req, res) {
             source: message.source,
             source_group: sourceGroup,
             media_urls: message.media_urls
-          })
-          .select()
-          .single();
-          
-        if (rawError) {
-          console.error("Error inserting raw data:", rawError);
-          continue;
+          };
         }
         
         rawDataInsertions.push(rawData);
@@ -293,17 +475,33 @@ export default async function handler(req, res) {
         );
         
         if (hasEssentialData) {
-          // Insert into processed_listings table
-          const { data: insertedListing, error: insertError } = await supabaseAdmin
-            .from('processed_listings')
-            .insert(listingData)
-            .select()
-            .single();
-            
-          if (insertError) {
-            console.error("Error inserting listing:", insertError);
+          // Insert into processed_listings table (skip database if not configured)
+          let insertedListing;
+          if (hasValidSupabase) {
+            const { data: dbInsertedListing, error: insertError } = await supabaseAdmin
+              .from('processed_listings')
+              .insert(listingData)
+              .select()
+              .single();
+              
+            if (insertError) {
+              console.error("Error inserting listing:", insertError);
+            } else {
+              insertedListing = dbInsertedListing;
+            }
           } else {
-            processedListings.push(insertedListing || listingData);
+            // Test mode - create mock inserted listing
+            insertedListing = {
+              ...listingData,
+              id: Date.now() + Math.random(),
+              created_at: new Date().toISOString()
+            };
+          }
+          
+          if (insertedListing) {
+            processedListings.push(insertedListing);
+          } else if (!hasValidSupabase) {
+            processedListings.push(listingData);
           }
         }
       } catch (error) {
@@ -311,7 +509,19 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log(`Processed ${messages.length} messages, found ${processedListings.length} valid listings`);
+    console.log(`Processed ${messagesToProcess} real estate messages, found ${processedListings.length} valid listings`);
+    console.log(`Total messages in file: ${messages.length}, Real estate messages: ${realEstateMessages.length}, Processed: ${messagesToProcess}, Valid listings: ${processedListings.length}`);
+
+    // Save to file storage if database is not configured
+    if (!hasValidSupabase && processedListings.length > 0) {
+      console.log("Saving listings to file storage...");
+      const fileStorageSuccess = saveListings(processedListings);
+      if (fileStorageSuccess) {
+        console.log("Successfully saved listings to file storage");
+      } else {
+        console.error("Failed to save listings to file storage");
+      }
+    }
 
     // Clean up the temporary file
     try {
@@ -325,12 +535,13 @@ export default async function handler(req, res) {
 
     // Always return a success response, even if no listings were found
     if (processedListings.length === 0) {
-      console.log("No valid property listings found in the messages");
+      console.log("No valid property listings found in the real estate messages");
       return res.status(200).json({
         success: true,
         totalMessages: messages.length,
+        realEstateMessages: realEstateMessages.length,
         processedListings: [],
-        message: "File processed successfully, but no property listings were detected. Try uploading a chat with real estate discussions."
+        message: `Processed ${messagesToProcess} real estate messages from ${messages.length} total messages, but could not extract complete property listings. The messages may lack essential details like price, location, or contact information.`
       });
     }
 
@@ -413,7 +624,9 @@ export default async function handler(req, res) {
       const responseObject = {
         success: true,
         totalMessages: messages.length,
-        processedListings: safeProcessedListings
+        realEstateMessages: realEstateMessages.length,
+        processedListings: safeProcessedListings,
+        message: `Successfully processed ${safeProcessedListings.length} property listings from ${messagesToProcess} real estate messages out of ${messages.length} total messages.`
       };
       
       // Set explicit headers

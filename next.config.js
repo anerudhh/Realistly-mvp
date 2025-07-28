@@ -10,7 +10,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ['formidable']
   },
   // Allow larger payloads for file uploads
-  api: {
+  serverRuntimeConfig: {
     responseLimit: '8mb',
     bodyParser: false
   },

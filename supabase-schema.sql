@@ -40,13 +40,52 @@ CREATE TABLE IF NOT EXISTS processed_listings (
   confidence_score NUMERIC,
   status TEXT DEFAULT 'needs_review',
   processed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  
+  -- New fields for image processing
+  extracted_from_image BOOLEAN DEFAULT false,
+  image_filename TEXT,
+  extracted_text TEXT,
+  ocr_method TEXT, -- 'google-vision', 'tesseract', or 'combined'
+  
+  -- Geocoding fields
+  latitude DECIMAL(10, 8),
+  longitude DECIMAL(11, 8),
+  standardized_address TEXT,
+  place_id TEXT,
+  geocoded_at TIMESTAMPTZ,
+  
+  -- Additional metadata
+  content TEXT, -- Original message content
+  sender_name TEXT,
+  sender_phone TEXT,
+  timestamp TIMESTAMPTZ,
+  source TEXT,
+  source_group TEXT,
+  contact_info TEXT
 );
 
 -- Add indexes for common query fields
 CREATE INDEX IF NOT EXISTS idx_processed_listings_property_type ON processed_listings (property_type);
 CREATE INDEX IF NOT EXISTS idx_processed_listings_status ON processed_listings (status);
 CREATE INDEX IF NOT EXISTS idx_processed_listings_confidence ON processed_listings (confidence_score);
+CREATE INDEX IF NOT EXISTS idx_processed_listings_image ON processed_listings (extracted_from_image);
+CREATE INDEX IF NOT EXISTS idx_processed_listings_location ON processed_listings USING GIN (location);
+CREATE INDEX IF NOT EXISTS idx_processed_listings_timestamp ON processed_listings (timestamp);
+
+-- Create spatial index for location-based queries (if PostGIS is enabled)
+-- CREATE INDEX IF NOT EXISTS idx_processed_listings_location_point 
+-- ON processed_listings USING GIST (ST_Point(longitude, latitude)) 
+-- WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
+
+-- Index for geocoding fields
+CREATE INDEX IF NOT EXISTS idx_processed_listings_coordinates 
+ON processed_listings (latitude, longitude) 
+WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_processed_listings_place_id 
+ON processed_listings (place_id) 
+WHERE place_id IS NOT NULL;
 
 -- Table for tracking user search queries
 CREATE TABLE IF NOT EXISTS user_queries (
